@@ -1,0 +1,2 @@
+# CERN Centos 7 image
+This docker file creates a CERN Centos 7 docker image with dependencies loaded for building a quasar server using a Unified Automation backend (v1.3.3) built from source. Note that this is a *private* image; it must *not* be circulated outwith the pool of developers with a valid Unified Automation license. This docker image also contains boost v1.59 (also built from source) with the default namespace name mapped from "boost" to "boost_1_59_0"_
