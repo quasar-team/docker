@@ -10,7 +10,7 @@ docker run -p 4000:4841 --name dock5 -t mydock
 //Get a public client, e.g., 
 //https://www.unified-automation.com/de/downloads/opc-ua-clients.html
 //Add Server within the advanced tab
-//Endpoint Url: opc.tcp://virtual-factory-iem-fraunhofer.cs.upb.de:4000
+//Endpoint Url: opc.tcp://XXXX:4000
 
 docker ps // here you get the id of the running job
 
