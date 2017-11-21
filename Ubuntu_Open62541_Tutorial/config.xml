@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://cern.ch/quasar/Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cern.ch/quasar/Configuration ../Configuration/Configuration.xsd ">
+	<Room name="kitchen">
+		<Termometer name="myTermometer"></Termometer></Room>
+	<Room name="living_room">
+		<Termometer name="t1"></Termometer>
+		<Termometer name="t2"></Termometer></Room>
+
+</configuration>
