@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<d:design projectShortName="" xmlns:d="http://cern.ch/quasar/Design" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cern.ch/quasar/Design Design.xsd ">
+  <d:class name="Termometer">
+  	<d:cachevariable name="temperature" addressSpaceWrite="forbidden"
+  		initializeWith="valueAndStatus" nullPolicy="nullAllowed"
+  		dataType="OpcUa_Double" 
+  		initialStatus="OpcUa_BadWaitingForInitialData">
+  	</d:cachevariable>
+  </d:class>
+  <d:class name="Room">
+  	<d:hasobjects instantiateUsing="configuration" class="Termometer"></d:hasobjects>
+  </d:class>
+  <d:root>
+  	<d:hasobjects instantiateUsing="configuration" class="Room"></d:hasobjects></d:root>
+</d:design>
