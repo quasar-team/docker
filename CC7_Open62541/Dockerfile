@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:16.10 
+FROM docker.io/ubuntu:18.04 
 
 MAINTAINER Quasar Development Team (https://github.com/quasar-team)
 
