@@ -27,6 +27,8 @@ RUN yum clean expire-cache \
      openssl-devel \
      pysvn \
      python-lxml \
+     python2-pip \
+&& pip install --upgrade pip && pip install enum34 \
 && yum clean all
 
 #
@@ -49,4 +51,4 @@ ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 # Copy zipped pre-built boost from docker build environment to  image
 #
 ADD boost_1_59_0.tar.gz /3rdPartySoftware
-ENV export BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
+ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
