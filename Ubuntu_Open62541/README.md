@@ -1,0 +1,2 @@
+# Ubuntu quasar image
+This docker file creates an Ubuntu docker image with dependencies loaded for the quasar quasar framework. Note that the image does not supply any OPC-UA back-end. Users of images built from this dockerfile wanting to build quasar servers will have to supply a back-end at build-time, for example the open source open62541 back-end (see open62541.org for details). The open62541 back-end can be integrated via the quasar optional module open62541-compat.
