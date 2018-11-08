@@ -1,29 +1,52 @@
-FROM docker.cern.ch/linuxsupport/cc7-base:latest 
+#
+# ==Purpose of the image created from this dockerfile==
+# Provides an image for building quasar created OPC-UA servers from source
+# using the Unified Automation backend.
+#
+# NOTE: Unified Automation is a *commercial* SDK, and this image is created
+# with a build of the full (i.e. paid-for) SDK. Therefore this image
+# MUST *NOT* BE MADE PUBLICLY AVAILABLE: Only SDK license holders may use it
+#
 
-RUN yum --assumeyes update && yum install --assumeyes \
- wget \
- gcc-c++ \
- git \
- make \
- cmake \
- xsd \
- java-1.8.0-openjdk \
- libxml2-devel \
- xerces-c-devel \
- openssl-devel \
- pysvn \
- python-lxml
+FROM gitlab-registry.cern.ch/linuxsupport/cc7-base
 
-# special! astyle, use homemade rpm rather than building it from source
-RUN wget https://cernbox.cern.ch/index.php/s/QfjnCb0mtVuSlJ2/download -O astyle.rpm && yum install --assumeyes astyle.rpm
+MAINTAINER Quasar Development Team (http://github.com/quasar-team)
+
+RUN yum clean expire-cache \ 
+&& yum --assumeyes update && yum install --assumeyes \
+     wget \
+     gcc-c++ \
+     git \
+     make \
+     cmake \
+     xsd \
+     astyle \
+     java-1.8.0-openjdk \
+     libxml2-devel \
+     xerces-c-devel \
+     openssl-devel \
+     pysvn \
+     python-lxml \
+&& yum clean all
 
 #
-# tidy up...
+# Clean the 3rdPartySoftware directory, paranoid perhaps.
 #
-RUN yum clean all
+CMD rm-rf /3rdPartySoftware && mkdir /3rdPartySoftware
 
-ADD boost_1_59_0_build.tar.gz /3rdPartySoftware/BoostBuild
-ADD unified_automation_1_1_3_build.tar.gz /3rdPartySoftware/UAToolkitBuild
+# 
+# Copy uasdk source distro from docker build environment, ADD auto-extracts to /3rdPartySoftware/sdk/
+# Build debug and release configurations, create static libs
+# Set environment SDK variable 
+#
+ADD uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz /3rdPartySoftware
+RUN cd /3rdPartySoftware/sdk && sh ./buildSdk.sh -c Debug Release -s OFF
+ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 
-ENV BOOST_HOME=/3rdPartySoftware/BoostBuild
-ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/UAToolkitBuild
+#
+# Boost. Note we cannot use boost version distributed in epel repo. At time of writing
+# it's too old (v1.48), we require boost Log: only introduced in 1.54.
+# Copy zipped pre-built boost from docker build environment to  image
+#
+ADD boost_1_59_0.tar.gz /3rdPartySoftware
+ENV export BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
