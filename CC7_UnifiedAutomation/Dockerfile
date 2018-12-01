@@ -42,7 +42,10 @@ CMD rm-rf /3rdPartySoftware && mkdir /3rdPartySoftware
 # Set environment SDK variable 
 #
 ADD uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz /3rdPartySoftware
-RUN cd /3rdPartySoftware/sdk && sh ./buildSdk.sh -c Debug Release -s OFF
+ADD CERN_build_static_ua_stack.cmake /3rdPartySoftware/sdk/
+RUN cd /3rdPartySoftware/sdk && \
+  rm ./lib/* && \
+  sh ./buildSdk.sh -t $(pwd)/CERN_build_static_ua_stack.cmake -c "Debug Release"
 ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 
 #
