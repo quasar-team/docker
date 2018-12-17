@@ -1,7 +1,7 @@
 # escape=`
 
-# Use the latest Windows Server Core image with .NET Framework 4.7.1.
-FROM microsoft/windowsservercore
+# Use windows server 2016 with python 2.7.15 (also installs pip)
+FROM python:2.7.15-windowsservercore-ltsc2016
 
 # Batch process in powershell
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
@@ -12,7 +12,8 @@ RUN Install-PackageProvider -Name "Nuget" -Force; `
     Install-Package -Name "git" -Provider "Chocolatey" -Force; `
     Install-Package -Name "xsltproc, astyle" -Provider "ChocolateyGet" -Force; `
     Install-Package -Name "nuget.commandline" -Provider "Chocolatey" -RequiredVersion 4.9.1 -Force; `
-    Install-Package -Name "microsoft-build-tools" -Provider "Chocolatey" -RequiredVersion 15.0.26228.0 -Force; 
+    Install-Package -Name "microsoft-build-tools" -Provider "Chocolatey" -RequiredVersion 15.0.26228.0 -Force; `
+    choco install cmake --version 3.12.4 --yes --installargs 'ADD_CMAKE_TO_PATH=System';
 
 RUN md -Path 'C:\3rdPartySoftware'; `
     $Env:Path += ';C:\Chocolatey\lib\NuGet.CommandLine.4.9.1\tools'; `
@@ -22,6 +23,26 @@ RUN md -Path 'C:\3rdPartySoftware'; `
     nuget install boost-vc141 -Version 1.67.0 -NonInteractive -ExcludeVersion -OutputDirectory  C:\3rdPartySoftware\;
     
 ENTRYPOINT ["powershell"]
+
+RUN md -Path 'C:\Downloads'; `
+    Invoke-WebRequest https://codesynthesis.com/download/xsd/4.0/windows/i686/xsd-4.0.msi -OutFile C:\Downloads\xsd-4.0.msi; `
+    Start-Process "C:\Downloads\xsd-4.0.msi" -Wait -ArgumentList /quiet; `
+    if(Test-Path "C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsd.exe") { `
+        Write-Output "Must change xsd.exe to xsdcxx.exe to avoid clash with built-in windows xsd.exe (on some systems)"; `
+        Copy-Item -Path "C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsd.exe" -Destination "C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsdcxx.exe"; `
+    } else { `
+        Write-Output "ERROR! Failed to locate installed xsdcxx binary file, required for generating C++ handler code from XSD schema"; `
+        Exit 1; `
+    }; `
+    Write-Output "Installed xsdcxx"; `
+    $Env:Path += ';C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin';
+
+RUN Write-Output "Installing python and packages..."; `
+  python -m pip install --upgrade pip; `
+  python -m pip install lxml==3.6.0 ; `
+  python -m pip install pygit2; `
+  python -m pip install enum34; `
+  Write-Output "Installed python packages";
 
 ### Download the Build Tools bootstrapper.
 ##ADD https://aka.ms/vs/15/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
