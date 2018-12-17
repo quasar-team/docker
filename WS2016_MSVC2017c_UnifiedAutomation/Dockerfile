@@ -26,23 +26,23 @@ ENTRYPOINT ["powershell"]
 
 RUN md -Path 'C:\Downloads'; `
     Invoke-WebRequest https://codesynthesis.com/download/xsd/4.0/windows/i686/xsd-4.0.msi -OutFile C:\Downloads\xsd-4.0.msi; `
-    Start-Process "C:\Downloads\xsd-4.0.msi" -Wait -ArgumentList /quiet; `
-    if(Test-Path "C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsd.exe") { `
-        Write-Output "Must change xsd.exe to xsdcxx.exe to avoid clash with built-in windows xsd.exe (on some systems)"; `
-        Copy-Item -Path "C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsd.exe" -Destination "C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsdcxx.exe"; `
+    Start-Process 'C:\Downloads\xsd-4.0.msi' -Wait -ArgumentList /quiet; `
+    if(Test-Path 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsd.exe') { `
+        Write-Output 'Must change xsd.exe to xsdcxx.exe to avoid clash with built-in windows xsd.exe (on some systems)'; `
+        Copy-Item -Path 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsd.exe' -Destination 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin\xsdcxx.exe'; `
     } else { `
         Write-Output "ERROR! Failed to locate installed xsdcxx binary file, required for generating C++ handler code from XSD schema"; `
         Exit 1; `
     }; `
-    Write-Output "Installed xsdcxx"; `
+    Write-Output 'Installed xsdcxx'; `
     $Env:Path += ';C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin';
 
-RUN Write-Output "Installing python and packages..."; `
+RUN Write-Output 'Installing python packages...'; `
   python -m pip install --upgrade pip; `
   python -m pip install lxml==3.6.0 ; `
   python -m pip install pygit2; `
   python -m pip install enum34; `
-  Write-Output "Installed python packages";
+  Write-Output 'Installed python packages';
 
 ### Download the Build Tools bootstrapper.
 ##ADD https://aka.ms/vs/15/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
