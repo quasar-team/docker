@@ -43,9 +43,15 @@ RUN Write-Output 'Installing python packages...'; `
   python -m pip install enum34; `
   Write-Output 'Installed python packages';
 
+RUN Write-Output 'Installing command line git'; `
+  [Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; `
+  Invoke-WebRequest http://github.com/git-for-windows/git/releases/download/v2.12.2.windows.2/MinGit-2.12.2.2-64-bit.zip -OutFile C:\Downloads\MinGit.zip; `
+  md -Path 'C:\MinGit'; `
+  Expand-Archive C:\Downloads\MinGit.zip -DestinationPath C:\MinGit;
+
 RUN Write-Output 'Extending path var and adding environment variables...' `
   refreshenv; `
-  [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\Program Files\Git\bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\MinGit\cmd\;C:\MinGit\cmd;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin', [EnvironmentVariableTarget]::Machine); `
   [Environment]::SetEnvironmentVariable('QUASAR_TEST_PROJECT_DIR', 'C:\workspace\OPC-UA\quasar-test-project', [EnvironmentVariableTarget]::Machine); `
   [Environment]::SetEnvironmentVariable('CODE_SYNTHESYS_XSD_PATH_HEADERS', 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\include', [EnvironmentVariableTarget]::Machine); `
   [Environment]::SetEnvironmentVariable('BOOST_PATH_HEADERS', 'C:\3rdPartySoftware\boost\lib\native\include', [EnvironmentVariableTarget]::Machine); `
