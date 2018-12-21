@@ -34,8 +34,7 @@ RUN md -Path 'C:\Downloads'; `
         Write-Output "ERROR! Failed to locate installed xsdcxx binary file, required for generating C++ handler code from XSD schema"; `
         Exit 1; `
     }; `
-    Write-Output 'Installed xsdcxx'; `
-    $Env:Path += ';C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin';
+    Write-Output 'Installed xsdcxx';
 
 RUN Write-Output 'Installing python packages...'; `
   python -m pip install --upgrade pip; `
@@ -44,31 +43,16 @@ RUN Write-Output 'Installing python packages...'; `
   python -m pip install enum34; `
   Write-Output 'Installed python packages';
 
-### Download the Build Tools bootstrapper.
-##ADD https://aka.ms/vs/15/release/vs_buildtools.exe C:\TEMP\vs_buildtools.exe
-##
-### Download the nuget installer
-##ADD https://dist.nuget.org/win-x86-commandline/v4.5.0/nuget.exe C:\Nuget\nuget.exe
-##
-### Install Build Tools excluding workloads and components with known issues.
-##RUN `
-##  Start-Process C:\TEMP\vs_buildtools.exe --quiet --wait --norestart --nocache `
-##    --installPath C:\BuildTools `
-##    --includeRecommended `
-##    --add Microsoft.VisualStudio.Product.BuildTools; `
-##  rm C:\TEMP\vs_buildtools.exe
-##
-##RUN `
-##  Start-Process C:\BuildTools\Common7\Tools\VsDevCmd.bat ;`
-##  msbuild /?
-##
-### Add nuget to path and test
-##RUN setx /M PATH $($Env:PATH + ';C:\Nuget\')
-##RUN `
-##  C:\Nuget\nuget help
-##
-### Start developer command prompt with any other commands specified.
-##ENTRYPOINT C:\BuildTools\Common7\Tools\VsDevCmd.bat &&
-##
-### Default to PowerShell if no other command specified.
-##CMD ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
+RUN Write-Output 'Extending path var and adding environment variables...' `
+  refreshenv; `
+  [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\Program Files\Git\bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('QUASAR_TEST_PROJECT_DIR', 'C:\workspace\OPC-UA\quasar-test-project', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('CODE_SYNTHESYS_XSD_PATH_HEADERS', 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\include', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('BOOST_PATH_HEADERS', 'C:\3rdPartySoftware\boost\lib\native\include', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('BOOST_PATH_LIBS', 'C:\3rdPartySoftware', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('OPENSSL_PATH_HEADERS', 'C:\3rdPartySoftware\openssl-vc141-static-x86_64\build\native\include', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('OPENSSL_PATH_LIBS', 'C:\3rdPartySoftware\openssl-vc141-static-x86_64\build\native\lib\x64\static\Release', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('XERCESC_PATH_HEADERS', 'C:\3rdPartySoftware\xercesc\build\native\include', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('XERCESC_PATH_LIBS', 'C:\3rdPartySoftware\xercesc\build\native\lib\x64\v110\Release', [EnvironmentVariableTarget]::Machine); `
+  refreshenv; `
+  ls env: ; 
