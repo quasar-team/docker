@@ -49,9 +49,14 @@ RUN Write-Output 'Installing command line git'; `
   md -Path 'C:\MinGit'; `
   Expand-Archive C:\Downloads\MinGit.zip -DestinationPath C:\MinGit;
 
+RUN Write-Output 'Installing Java runtime' ; `
+  Invoke-WebRequest https://cdn.azul.com/zulu/bin/zulu8.19.0.1-jdk8.0.112-win_x64.zip -OutFile C:\Downloads\openjdk.zip; `
+  Expand-Archive C:\Downloads\openjdk.zip -d C:\openjdk; `
+  Remove-Item C:\openjdk\zulu*\sample, C:\openjdk\zulu*\demo, C:\openjdk\zulu*\src.zip,  C:\openjdk\zulu*\demo -Force -Recurse;
+
 RUN Write-Output 'Extending path var and adding environment variables...' `
   refreshenv; `
-  [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\MinGit\cmd\;C:\MinGit\cmd;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin', [EnvironmentVariableTarget]::Machine); `
+  [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\MinGit\cmd\;C:\MinGit\cmd;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin;C:\openjdk\zulu8.19.0.1-jdk8.0.112-win_x64\jre\bin', [EnvironmentVariableTarget]::Machine); `
   [Environment]::SetEnvironmentVariable('QUASAR_TEST_PROJECT_DIR', 'C:\workspace\OPC-UA\quasar-test-project', [EnvironmentVariableTarget]::Machine); `
   [Environment]::SetEnvironmentVariable('CODE_SYNTHESYS_XSD_PATH_HEADERS', 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\include', [EnvironmentVariableTarget]::Machine); `
   [Environment]::SetEnvironmentVariable('BOOST_PATH_HEADERS', 'C:\3rdPartySoftware\boost\lib\native\include', [EnvironmentVariableTarget]::Machine); `
