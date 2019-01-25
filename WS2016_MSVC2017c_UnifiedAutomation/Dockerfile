@@ -14,7 +14,7 @@ RUN Write-Output 'Installing choco packages...'; `
     Install-Package -Name "git" -Provider "Chocolatey" -Force; `
     Install-Package -Name "xsltproc, astyle" -Provider "ChocolateyGet" -Force; `
     Install-Package -Name "nuget.commandline" -Provider "Chocolatey" -RequiredVersion 4.9.1 -Force; `
-    choco install visualstudio2017buildtools --yes --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended" --force; `
+    choco install visualstudio2017community  --version 15.9.2.0 --yes --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --includeRecommended" --force; `
     choco install cmake --version 3.12.4 --yes --installargs 'ADD_CMAKE_TO_PATH=System'; `
     Write-Output 'Installed choco packages';
 
@@ -62,7 +62,7 @@ RUN Write-Output 'Installing Java runtime' ; `
 
 RUN Write-Output 'Extending path var and adding environment variables...' `
     refreshenv; `
-    [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\MinGit\cmd\;C:\MinGit\cmd;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin;C:\openjdk\zulu8.19.0.1-jdk8.0.112-win_x64\jre\bin', [EnvironmentVariableTarget]::Machine); `
+    [Environment]::SetEnvironmentVariable('Path', $env:Path + ';C:\MinGit\cmd\;C:\MinGit\cmd;C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;C:\Program Files (x86)\CodeSynthesis XSD 4.0\bin;C:\openjdk\zulu8.19.0.1-jdk8.0.112-win_x64\jre\bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\bin\Hostx64\x86', [EnvironmentVariableTarget]::Machine); `
     [Environment]::SetEnvironmentVariable('QUASAR_TEST_PROJECT_DIR', 'C:\workspace\OPC-UA\quasar-test-project', [EnvironmentVariableTarget]::Machine); `
     [Environment]::SetEnvironmentVariable('CODE_SYNTHESYS_XSD_PATH_HEADERS', 'C:\Program Files (x86)\CodeSynthesis XSD 4.0\include', [EnvironmentVariableTarget]::Machine); `
     [Environment]::SetEnvironmentVariable('BOOST_PATH_HEADERS', 'C:\3rdPartySoftware\boost\lib\native\include', [EnvironmentVariableTarget]::Machine); `
