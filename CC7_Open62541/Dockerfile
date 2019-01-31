@@ -23,6 +23,7 @@ RUN yum clean expire-cache \
      pysvn \
      python-lxml \
      python2-pip \
+     rpm-build \
 && pip install --upgrade pip && pip install enum34 \
 && yum clean all
 
