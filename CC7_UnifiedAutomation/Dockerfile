@@ -63,3 +63,5 @@ ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 #
 ADD boost_1_59_0.tar.gz /3rdPartySoftware
 ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
+
+ADD boost_1_68_0.tar.gz /3rdPartySoftware
