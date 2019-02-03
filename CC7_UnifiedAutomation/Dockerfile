@@ -18,7 +18,7 @@ RUN yum clean expire-cache \
      gcc-c++ \
      git \
      make \
-     cmake \
+     cmake3 \
      xsd \
      astyle \
      java-1.8.0-openjdk \
@@ -29,6 +29,9 @@ RUN yum clean expire-cache \
      python-lxml \
      python2-pip \
      rpm-build \
+     qt-devel \
+     libsocketcan-devel \
+&& ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && pip install --upgrade pip && pip install enum34 \
 && yum clean all
 
