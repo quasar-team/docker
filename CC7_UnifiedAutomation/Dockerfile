@@ -33,6 +33,8 @@ RUN yum clean expire-cache \
      libsocketcan-devel \
      doxygen \
      graphviz \
+     net-snmp-devel \
+     vim \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && pip install --upgrade pip && pip install enum34 \
 && yum clean all
