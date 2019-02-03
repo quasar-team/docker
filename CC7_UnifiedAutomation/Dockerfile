@@ -31,6 +31,8 @@ RUN yum clean expire-cache \
      rpm-build \
      qt-devel \
      libsocketcan-devel \
+     doxygen \
+     graphviz \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && pip install --upgrade pip && pip install enum34 \
 && yum clean all
