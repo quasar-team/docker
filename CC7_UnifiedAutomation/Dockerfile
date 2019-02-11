@@ -67,7 +67,9 @@ ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
 ADD boost_1_68_0.tar.gz /3rdPartySoftware
 
 # 
-# Note - below only copies kvaser lib download archive to docker image; no install
-# The idea is to have builds setup/install whichever CAN dependencies they require.
+# canlib (kvaser)
 #
-COPY linuxcan.tar.gz /3rdPartySoftware/Kvaser/
+ADD linuxcan.tar.gz /3rdPartySoftware/Kvaser/
+RUN cd /3rdPartySoftware/Kvaser/linuxcan/canlib/ \
+&& make && make install \
+&& rm -rf /3rdPartySoftware/Kvaser/
