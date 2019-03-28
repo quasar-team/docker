@@ -36,6 +36,7 @@ RUN yum clean expire-cache \
      net-snmp-devel \
      vim \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
+&& ln -s /usr/bin/cpack3 /usr/bin/cpack \
 && pip install --upgrade pip && pip install enum34 \
 && yum clean all
 
@@ -46,14 +47,15 @@ CMD rm-rf /3rdPartySoftware && mkdir /3rdPartySoftware
 
 # 
 # Copy uasdk source distro from docker build environment, ADD auto-extracts to /3rdPartySoftware/sdk/
-# Build debug and release configurations, create static libs
+# Build debug and release configurations, create static libs (then delete all source code etc)
 # Set environment SDK variable 
 #
 ADD uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz /3rdPartySoftware
 ADD CERN_build_static_ua_stack.cmake /3rdPartySoftware/sdk/
 RUN cd /3rdPartySoftware/sdk && \
   rm ./lib/* && \
-  sh ./buildSdk.sh -t $(pwd)/CERN_build_static_ua_stack.cmake -c "Debug Release"
+  sh ./buildSdk.sh -t $(pwd)/CERN_build_static_ua_stack.cmake -c "Debug Release" && \
+  find . -mindepth 1 -maxdepth 1 -type d -not -name include -not -name lib -not -name lic -exec rm -rf {} +
 ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 
 #
@@ -65,11 +67,3 @@ ADD boost_1_59_0.tar.gz /3rdPartySoftware
 ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
 
 ADD boost_1_68_0.tar.gz /3rdPartySoftware
-
-# 
-# canlib (kvaser)
-#
-ADD linuxcan.tar.gz /3rdPartySoftware/Kvaser/
-RUN cd /3rdPartySoftware/Kvaser/linuxcan/canlib/ \
-&& make && make install \
-&& rm -rf /3rdPartySoftware/Kvaser/
