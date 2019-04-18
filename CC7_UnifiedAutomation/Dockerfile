@@ -35,6 +35,7 @@ RUN yum clean expire-cache \
      graphviz \
      net-snmp-devel \
      vim \
+     texlive texlive-xtab texlive-multirow texlive-sectsty texlive-tocloft texmaker \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && ln -s /usr/bin/cpack3 /usr/bin/cpack \
 && pip install --upgrade pip && pip install enum34 \
