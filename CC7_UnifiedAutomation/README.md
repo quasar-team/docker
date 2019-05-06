@@ -3,13 +3,13 @@ This docker file creates a CERN Centos 7 docker image with dependencies loaded f
 
 In order to build an image from this file, the developer must supply both a (zipped) Unified Automation toolkit install build and a boost build.
 
-Contents of the directory from which this docker image is built
-.
-├── boost_1_59_0.tar.gz
-├── boost_1_68_0.tar.gz
-├── CERN_build_static_ua_stack.cmake
-├── Dockerfile
-├── libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm
-├── README.md
-└── uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz
-
+Contents of the directory from which this docker image is built  
+.  
+├── boost_1_59_0.tar.gz  
+├── boost_1_68_0.tar.gz  
+├── CERN_build_static_ua_stack.cmake  
+├── Dockerfile  
+├── libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm  
+├── README.md  
+└── uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz  
+  
