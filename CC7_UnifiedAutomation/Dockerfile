@@ -30,9 +30,11 @@ RUN yum clean expire-cache \
      python2-pip \
      rpm-build \
      qt-devel \
+     libsocketcan \
      libsocketcan-devel \
      doxygen \
      graphviz \
+     net-snmp \
      net-snmp-devel \
      vim \
      texlive texlive-xtab texlive-multirow texlive-sectsty texlive-tocloft texmaker \
