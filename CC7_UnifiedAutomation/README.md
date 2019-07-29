@@ -11,5 +11,5 @@ Contents of the directory from which this docker image is built
 ├── Dockerfile  
 ├── libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm  
 ├── README.md  
-└── uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz  
-  
+├── uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz
+└── anagate-api-2.13.tar.gz

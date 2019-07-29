@@ -72,3 +72,9 @@ ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
 ADD boost_1_68_0.tar.gz /3rdPartySoftware
 ADD libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm /tmp/
 RUN yum install --assumeyes /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm && yum clean all
+
+#
+# Anagate. Add dependencies from local zip file
+# zip file obtained from http://www.anagate.de/en/support/download.htm
+#
+ADD anagate-api-2.13.tar.gz /3rdPartySoftware
