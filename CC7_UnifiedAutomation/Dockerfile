@@ -41,7 +41,7 @@ RUN yum clean expire-cache \
      qt5-qtbase-devel qt5-qtserialport-devel \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && ln -s /usr/bin/cpack3 /usr/bin/cpack \
-&& pip install --upgrade pip && pip install enum34 && pip install six \
+&& pip install --upgrade pip && pip install enum34 && pip install six && pip install pygit2 \
 && yum clean all
 
 #
