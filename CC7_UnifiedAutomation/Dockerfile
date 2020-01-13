@@ -12,6 +12,8 @@ FROM gitlab-registry.cern.ch/linuxsupport/cc7-base
 
 MAINTAINER Quasar Development Team (http://github.com/quasar-team)
 
+ADD libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm /tmp/
+
 RUN yum clean expire-cache \ 
 && yum --assumeyes update && yum install --assumeyes \
      wget \
@@ -30,8 +32,7 @@ RUN yum clean expire-cache \
      python2-pip \
      rpm-build \
      qt-devel \
-     libsocketcan \
-     libsocketcan-devel \
+     /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm \
      doxygen \
      graphviz \
      net-snmp \
@@ -41,7 +42,7 @@ RUN yum clean expire-cache \
      qt5-qtbase-devel qt5-qtserialport-devel \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && ln -s /usr/bin/cpack3 /usr/bin/cpack \
-&& pip install --upgrade pip && pip install enum34 && pip install six && pip install pygit2 \
+&& pip install --upgrade pip && pip install enum34 && pip install six && pip install pygit2==0.28.2 \
 && yum clean all
 
 #
@@ -68,14 +69,11 @@ ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 # Copy zipped pre-built boost from docker build environment to  image
 #
 ADD boost_1_59_0.tar.gz /3rdPartySoftware
-ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
-
 ADD boost_1_68_0.tar.gz /3rdPartySoftware
-ADD libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm /tmp/
-RUN yum install --assumeyes /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm && yum clean all
+ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
 
 #
 # Anagate. Add dependencies from local zip file
-# zip file obtained from http://www.anagate.de/en/support/download.htm
+# zip file obtained from http://www.anagate.de/en/support/download.htm - more info in README.md
 #
-ADD anagate-api-2.13.tar.gz /3rdPartySoftware
+ADD anagate-redistributables.tar.gz /3rdPartySoftware
