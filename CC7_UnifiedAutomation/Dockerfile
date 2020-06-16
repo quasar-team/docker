@@ -21,6 +21,7 @@ RUN yum clean expire-cache \
      git \
      make \
      cmake3 \
+     ninja-build \
      xsd \
      astyle \
      java-1.8.0-openjdk \
@@ -42,7 +43,12 @@ RUN yum clean expire-cache \
      qt5-qtbase-devel qt5-qtserialport-devel \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && ln -s /usr/bin/cpack3 /usr/bin/cpack \
-&& pip install --upgrade pip && pip install enum34 && pip install six && pip install pygit2==0.28.2 \
+&& pip install --upgrade pip \
+&& pip install enum34 \
+&& pip install six \
+&& pip install pygit2==0.28.2 \
+&& pip install jinja2 \
+&& pip install colorama \
 && yum clean all
 
 #
