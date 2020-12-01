@@ -10,15 +10,14 @@ RUN apt-get -y update && \
  astyle \
  libxml2-utils \
  xsdcxx \
- default-jre \
  python3-jinja2 \
  python3-colorama \
  python3-lxml \
- python-svn \
  libxml2-dev \
  libxerces-c-dev \
  libboost-all-dev \
  libssl-dev \
+ vim \
  && apt-get clean all
 
 RUN ln -s /usr/bin/cmake /usr/bin/cmake3 && \
@@ -26,3 +25,6 @@ RUN ln -s /usr/bin/cmake /usr/bin/cmake3 && \
  git config --global user.name QuasarDeveloper
 
 ENV BOOST_LIBS="-lboost_thread -lboost_system -lboost_program_options -lboost_system"
+
+RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.4 \
+  && cd UaSwissArmyKnife && bash build_linux_open62541.sh && cd build && make install
