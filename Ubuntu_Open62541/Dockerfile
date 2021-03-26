@@ -26,5 +26,5 @@ RUN ln -s /usr/bin/cmake /usr/bin/cmake3 && \
 
 ENV BOOST_LIBS="-lboost_thread -lboost_system -lboost_program_options -lboost_system"
 
-RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.4 \
+RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.5 \
   && cd UaSwissArmyKnife && bash build_linux_open62541.sh && cd build && make install
