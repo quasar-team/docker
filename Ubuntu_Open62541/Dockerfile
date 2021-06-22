@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:18.04 
+FROM docker.io/ubuntu:18.04
 
 MAINTAINER Quasar Development Team (https://github.com/quasar-team)
 
@@ -28,3 +28,5 @@ ENV BOOST_LIBS="-lboost_thread -lboost_system -lboost_program_options -lboost_sy
 
 RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.5 \
   && cd UaSwissArmyKnife && bash build_linux_open62541.sh && cd build && make install
+
+RUN cd /opt && git clone https://github.com/quasar-team/NodeSetTools.git -b v0.0.1
