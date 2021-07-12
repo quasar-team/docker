@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 COPY sdk/include /opt/uasdk/include
 COPY sdk/lib /opt/uasdk/lib
 
-RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.5 \
+RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.6 \
   && cd UaSwissArmyKnife && bash build_linux_open62541.sh && cd build && make install
 
-RUN cd /opt && git clone https://github.com/quasar-team/NodeSetTools.git -b v0.0.1
+RUN cd /opt && git clone https://github.com/quasar-team/NodeSetTools.git -b v0.0.3
