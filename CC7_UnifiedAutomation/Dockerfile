@@ -13,6 +13,7 @@ FROM gitlab-registry.cern.ch/linuxsupport/cc7-base
 MAINTAINER Quasar Development Team (http://github.com/quasar-team)
 
 ADD libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm /tmp/
+ADD astyle-3.1-8.el7.cern.x86_64.rpm /tmp/
 
 RUN yum clean expire-cache \ 
 && yum --assumeyes update && yum install --assumeyes \
@@ -28,12 +29,11 @@ RUN yum clean expire-cache \
      libxml2-devel \
      xerces-c-devel \
      openssl-devel \
-     pysvn \
-     python-lxml \
-     python2-pip \
+     python3 \
      rpm-build \
      qt-devel \
      /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm \
+     /tmp/astyle-3.1-8.el7.cern.x86_64.rpm \
      doxygen \
      graphviz \
      net-snmp \
@@ -43,18 +43,19 @@ RUN yum clean expire-cache \
      qt5-qtbase-devel qt5-qtserialport-devel \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && ln -s /usr/bin/cpack3 /usr/bin/cpack \
-&& pip install --upgrade pip \
-&& pip install enum34 \
-&& pip install six \
-&& pip install pygit2==0.28.2 \
-&& pip install jinja2 \
-&& pip install colorama \
+&& pip3 install --upgrade pip \
+&& pip3 install lxml \
+&& pip3 install jinja2 \
+&& pip3 install colorama \
+&& pip3 install pygit2==0.28.2 \
 && yum clean all
 
 #
-# Clean the 3rdPartySoftware directory, paranoid perhaps.
+# Clean the 3rdPartySoftware directory, paranoid perhaps. Plus remove temp rpms
 #
-CMD rm-rf /3rdPartySoftware && mkdir /3rdPartySoftware
+CMD rm -rf /3rdPartySoftware && mkdir /3rdPartySoftware
+CMD rm -rf /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm
+CMD rm -rf /tmp/astyle-3.1-8.el7.cern.x86_64.rpm
 
 # 
 # Copy uasdk source distro from docker build environment, ADD auto-extracts to /3rdPartySoftware/sdk/
