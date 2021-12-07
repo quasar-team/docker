@@ -16,7 +16,8 @@ ADD libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm /tmp/
 ADD astyle-3.1-8.el7.cern.x86_64.rpm /tmp/
 
 RUN yum clean expire-cache \ 
-&& yum --assumeyes update && yum install --assumeyes \
+&&  yum --assumeyes update \
+&&  yum install --assumeyes \
      wget \
      gcc-c++ \
      git \
@@ -24,8 +25,6 @@ RUN yum clean expire-cache \
      cmake3 \
      ninja-build \
      xsd \
-     astyle \
-     java-1.8.0-openjdk \
      libxml2-devel \
      xerces-c-devel \
      openssl-devel \
@@ -43,11 +42,6 @@ RUN yum clean expire-cache \
      qt5-qtbase-devel qt5-qtserialport-devel \
 && ln -s /usr/bin/cmake3 /usr/bin/cmake \
 && ln -s /usr/bin/cpack3 /usr/bin/cpack \
-&& pip3 install --upgrade pip \
-&& pip3 install lxml \
-&& pip3 install jinja2 \
-&& pip3 install colorama \
-&& pip3 install pygit2==0.28.2 \
 && yum clean all
 
 #
@@ -75,12 +69,18 @@ ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 # it's too old (v1.48), we require boost Log: only introduced in 1.54.
 # Copy zipped pre-built boost from docker build environment to  image
 #
-ADD boost_1_59_0.tar.gz /3rdPartySoftware
 ADD boost_1_68_0.tar.gz /3rdPartySoftware
-ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
+ENV BOOST_HOME=/3rdPartySoftware/boost_1_68_0/
 
 #
 # Anagate. Add dependencies from local zip file
 # zip file obtained from http://www.anagate.de/en/support/download.htm - more info in README.md
 #
 ADD anagate-redistributables.tar.gz /3rdPartySoftware
+#
+# load python deps to a virtual env ( /python3_quasar_venv ). Activate venv to use
+#
+RUN python3 -m venv /python3_quasar_venv \
+&&  source /python3_quasar_venv/bin/activate \
+&&  python3 -m pip install --upgrade pip lxml jinja2 colorama pygit2==0.28.2
+CMD source /python3_quasar_venv/bin/activate
