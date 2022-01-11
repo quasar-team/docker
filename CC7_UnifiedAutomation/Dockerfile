@@ -56,7 +56,7 @@ CMD rm -rf /tmp/astyle-3.1-8.el7.cern.x86_64.rpm
 # Build debug and release configurations, create static libs (then delete all source code etc)
 # Set environment SDK variable 
 #
-ADD uasdkcppbundle-src-centos7.0-x86_64-gcc4.8.2-v1.5.6-361.tar.gz /3rdPartySoftware
+ADD uasdkcppbundle-src-debian9.3-x86_64-gcc6.3.0-v1.6.5-478.tar.gz /3rdPartySoftware
 ADD CERN_build_static_ua_stack.cmake /3rdPartySoftware/sdk/
 RUN cd /3rdPartySoftware/sdk && \
   rm ./lib/* && \
