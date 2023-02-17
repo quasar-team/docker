@@ -7,35 +7,58 @@ FROM gitlab-registry.cern.ch/linuxsupport/cc7-base
 
 MAINTAINER Quasar Development Team (http://github.com/quasar-team)
 
+ADD libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm /tmp/
+ADD astyle-3.1-8.el7.cern.x86_64.rpm /tmp/
+
 RUN yum clean expire-cache \ 
-&& yum --assumeyes update && yum install --assumeyes \
+&&  yum --assumeyes update \
+&&  yum install --assumeyes \
      wget \
-     gcc-c++ \
      git \
      make \
-     cmake \
+     cmake3 \
+     centos-release-scl \
+     devtoolset-11 \
+     ninja-build \
      xsd \
      astyle \
-     java-1.8.0-openjdk \
      libxml2-devel \
      xerces-c-devel \
      openssl-devel \
-     pysvn \
-     python-lxml \
-     python2-pip \
-     rpm-build \
-&& pip install --upgrade pip && pip install enum34 \
-&& yum clean all
+     openssl11-libs \
+     python3 \
+     /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm \
+     /tmp/astyle-3.1-8.el7.cern.x86_64.rpm \
+     net-snmp \
+     net-snmp-devel \
+     vim \
+&& yum clean all \
+&& ln -sf /usr/bin/cmake3 /usr/bin/cmake \
+&& ln -sf /usr/bin/python3 /usr/bin/python \
+&& rm -rf /tmp/libsocketcan-devel-0.0.9-p0.cc7.x86_64.rpm \
+&& rm -rf /tmp/astyle-3.1-8.el7.cern.x86_64.rpm \
+&& rm -rf /3rdPartySoftware && mkdir /3rdPartySoftware
 
 #
-# Clean the 3rdPartySoftware directory, paranoid perhaps.
+# create virtual python env, fill with required deps ( /python3_quasar_venv ). Activate venv to use
 #
-CMD rm-rf /3rdPartySoftware && mkdir /3rdPartySoftware
+RUN python3 -m venv /python3_quasar_venv \
+&&  source /python3_quasar_venv/bin/activate \
+&&  python3 -m pip install --upgrade pip lxml jinja2 colorama pygit2==0.28.2
 
 #
-# Boost. Note we cannot use boost version distributed in epel repo. At time of writing
-# it's too old (v1.48), we require boost Log: only introduced in 1.54.
-# Copy zipped pre-built boost from docker build environment to  image
+# Anagate. Add dependencies from local zip file
+# zip file obtained from http://www.anagate.de/en/support/download.htm - more info in README.md
 #
-ADD boost_1_59_0.tar.gz /3rdPartySoftware
-ENV BOOST_HOME=/3rdPartySoftware/boost_1_59_0/
+ADD anagate-redistributables.tar.gz /3rdPartySoftware
+
+#
+# Boost; use 1_81_0 (pre-built outside this image)
+#
+ADD boost_1_81_0.tar.gz /3rdPartySoftware
+ENV BOOST_HOME=/3rdPartySoftware/boost_1_81_0
+
+#
+# Enable devtoolset
+#
+CMD source scl_source enable devtoolset-11

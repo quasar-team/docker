@@ -33,6 +33,8 @@ RUN yum clean expire-cache \
      git \
      make \
      cmake3 \
+     centos-release-scl \
+     devtoolset-11 \
      ninja-build \
      xsd \
      astyle \
@@ -70,7 +72,7 @@ RUN python3 -m venv /python3_quasar_venv \
 # 
 # Copy pre-built uasdk distro from docker build environment, ADD to /3rdPartySoftware/sdk/
 #
-ADD sdk-1_6_5_x86_64-centos7-gcc10.tar.gz /3rdPartySoftware/
+ADD sdk-1_6_5_x86_64-centos7-g++11.tar.gz /3rdPartySoftware/
 ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 
 #
@@ -80,12 +82,12 @@ ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 ADD anagate-redistributables.tar.gz /3rdPartySoftware
 
 #
-# Boost; use version in LCG_99 release
+# Boost; use 1_81_0 (pre-built outside this image)
 #
-ENV BOOST_ROOT=/cvmfs/sft.cern.ch/lcg/releases/LCG_99/Boost/1.73.0/x86_64-centos7-gcc10-opt
+ADD boost_1_81_0.tar.gz /3rdPartySoftware
+ENV BOOST_HOME=/3rdPartySoftware/boost_1_81_0
 
 #
-# (runtime) activate g++10 (from cvmfs) and python venv
+# Enable devtoolset
 #
-CMD source /cvmfs/sft.cern.ch/lcg/releases/LCG_99/setuptools/44.1.0/x86_64-centos7-gcc10-opt/setuptools-env.sh
-CMD source /python3_quasar_venv/bin/activate
+CMD source scl_source enable devtoolset-11
