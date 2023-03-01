@@ -1,7 +1,3 @@
-CC7_UnifiedAutomation/boost_*.tar.gz
-CC7_UnifiedAutomation/uasdkcppbundle-src*.tar.gz
-CC7_UnifiedAutomation/astyle*.rpm
-CC7_UnifiedAutomation/libsocketcan*.rpm
 **/*.swp
-CC7_UnifiedAutomation/sdk-*.tar.gz
-CC7_Open62541/boost*.tar.gz
+**/*.tar.gz
+**/*.rpm
