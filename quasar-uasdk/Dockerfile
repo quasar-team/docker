@@ -1,21 +1,86 @@
-FROM ubuntu:18.04
-RUN apt-get update && apt-get install -y \
-  g++ \
-  git \
-  python3 \
-  python3-lxml \
-  python3-jinja2 \
+# Copyright (C) 2023 Paris Moschovakos <paris@moschovakos.com>
+
+FROM cern/alma9-base
+
+LABEL Paris Moschovakos
+
+RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+#
+# Update dependancies
+#
+RUN dnf install -y \
+
+#
+#	Install basic dependencies
+#
+    git \
+    patch \
+
+#
+#	Install python dependencies
+#
+#  python3 \
   python3-colorama \
-  cmake \
-  libboost-all-dev \
-  libxml2-utils \
-  xsdcxx \
+  python3-jinja2 \
+  python3-lxml \
+  python3-pip \
+
+#
+# Install CMake3
+#
+  cmake3 \
+
+#
+# Install compiler
+#
+  gcc-c++ \
+
+#
+#	Install boost dependencies
+#
+  boost-devel \
+
+#
+# Install graphviz for generating diagrams
+#
+  graphviz \
+
+#
+# Install ninja used as CMake generator
+#
+  ninja-build \
+
+#
+# Install XML related dependancies
+#
+  xsd \
+  xerces-c-devel \
+  libxml2-devel \
+
+#
+# Install misc dependancies (hashing etc)
+#
+  openssl-devel \
+
+#
+# Install doxygen for documentation generation
+#
+  doxygen \
+
+#
+# Install astyle for source code formatting
+#
   astyle \
-  libxerces-c-dev \
-  libssl-dev \
-  libxml2-dev \
-  vim \
-  && update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+
+
+# Clean all cached information
+  && dnf clean all \
+
+#
+# Install pygit2
+#
+  && python3 -m pip install pygit2
+
 COPY sdk/include /opt/uasdk/include
 COPY sdk/lib /opt/uasdk/lib
 
