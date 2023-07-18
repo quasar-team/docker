@@ -71,6 +71,8 @@ ENV UNIFIED_AUTOMATION_HOME=/3rdPartySoftware/sdk/
 #
 ADD boost_1_68_0.tar.gz /3rdPartySoftware
 ENV BOOST_HOME=/3rdPartySoftware/boost_1_68_0/
+ENV BOOST_PATH_HEADERS=/3rdPartySoftware/boost_1_68_0/include
+ENV BOOST_PATH_LIBS=/3rdPartySoftware/boost_1_68_0/lib
 
 #
 # Anagate. Add dependencies from local zip file
