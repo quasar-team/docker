@@ -86,6 +86,8 @@ ADD anagate-redistributables.tar.gz /3rdPartySoftware
 #
 ADD boost_1_81_0.tar.gz /3rdPartySoftware
 ENV BOOST_HOME=/3rdPartySoftware/boost_1_81_0
+ENV BOOST_PATH_HEADERS=/3rdPartySoftware/boost_1_81_0/include
+ENV BOOST_PATH_LIBS=/3rdPartySoftware/boost_1_81_0/lib
 
 #
 # Enable devtoolset
