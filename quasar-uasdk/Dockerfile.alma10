@@ -36,6 +36,7 @@ RUN dnf install -y \
   python3-jinja2 \
   python3-lxml \
   python3-pip \
+  python3-setuptools \
 
 #
 # Install CMake
