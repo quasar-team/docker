@@ -1,0 +1,126 @@
+# Copyright (C) 2023 Paris Moschovakos <paris@moschovakos.com>
+
+# Stage 1: Clone repos using alma9 (avoids alma10 OpenSSL TLS provider issue
+# under Docker Desktop Rosetta emulation on Apple Silicon)
+FROM cern/alma9-base AS git-fetcher
+RUN dnf install -y git
+RUN git clone https://github.com/quasar-team/UaSwissArmyKnife.git -b v0.7
+RUN git clone https://github.com/pnikiel/PrepareEcosystem.git
+RUN git clone --depth=1 -b v0.1.3 https://github.com/quasar-team/LogIt.git
+RUN git clone --depth=1 -b master https://github.com/quasar-team/open62541-compat.git
+RUN git clone https://github.com/quasar-team/NodeSetTools.git -b v0.0.5
+
+# Stage 2: AlmaLinux 10 CI image
+FROM cern/alma10-base
+
+LABEL maintainer="Paris Moschovakos"
+LABEL org.opencontainers.image.source="https://github.com/quasar-team/docker"
+
+RUN dnf install -y epel-release
+#
+# Update dependancies
+#
+RUN dnf install -y \
+
+#
+#	Install basic dependencies
+#
+    git \
+    patch \
+
+#
+#	Install python dependencies
+#
+#  python3 \
+  python3-colorama \
+  python3-jinja2 \
+  python3-lxml \
+  python3-pip \
+
+#
+# Install CMake
+#
+  cmake \
+
+#
+# Install compiler
+#
+  gcc-c++ \
+
+#
+#	Install boost dependencies
+#
+  boost-devel \
+
+#
+# Install graphviz for generating diagrams
+#
+  graphviz \
+
+#
+# Install ninja used as CMake generator
+#
+  ninja-build \
+
+#
+# Install XML related dependancies
+#
+  xsd \
+  xerces-c-devel \
+  libxml2-devel \
+
+#
+# Install misc dependancies (hashing etc)
+#
+  openssl-devel \
+
+#
+# Install doxygen for documentation generation
+#
+  doxygen \
+
+#
+# Install astyle for source code formatting
+#
+  astyle \
+
+# Clean all cached information
+  && dnf clean all \
+
+#
+# Install pygit2
+#
+  && python3 -m pip install pygit2
+
+COPY sdk/include /opt/uasdk/include
+COPY sdk/lib /opt/uasdk/lib
+
+# Build UaSwissArmyKnife from pre-cloned sources (avoids git clone during build)
+COPY --from=git-fetcher /UaSwissArmyKnife /UaSwissArmyKnife
+COPY --from=git-fetcher /PrepareEcosystem /UaSwissArmyKnife/build/PrepareEcosystem
+COPY --from=git-fetcher /LogIt /UaSwissArmyKnife/build/work/LogIt
+COPY --from=git-fetcher /open62541-compat /UaSwissArmyKnife/build/work/open62541-compat
+
+# Build LogIt
+RUN cd /UaSwissArmyKnife/build/work/LogIt \
+  && mkdir build && cd build \
+  && cmake -DLOGIT_BUILD_STAND_ALONE=ON -DLOGIT_BUILD_STATIC_LIB=ON \
+     -DCMAKE_INSTALL_PREFIX=/UaSwissArmyKnife/build/deploy/LogIt ../ \
+  && make && make install
+
+# Build open62541-compat
+RUN cd /UaSwissArmyKnife/build/work/open62541-compat \
+  && mkdir build && cd build \
+  && cmake -DSTANDALONE_BUILD=ON -DLOGIT_BUILD_OPTION=LOGIT_AS_EXT_STATIC \
+     -DOPEN62541-COMPAT_BUILD_CONFIG_FILE=boost_lcg.cmake \
+     -DLOGIT_INCLUDE_DIR=/UaSwissArmyKnife/build/deploy/LogIt/include \
+     -DLOGIT_EXT_LIB_DIR=/UaSwissArmyKnife/build/deploy/LogIt/lib \
+     -DCMAKE_INSTALL_PREFIX=/UaSwissArmyKnife/build/deploy/open62541-compat \
+     -DSKIP_TESTS=ON ../ \
+  && make && make install
+
+# Build UaSwissArmyKnife itself
+RUN cd /UaSwissArmyKnife/build \
+  && cmake ../ && make && make install
+
+COPY --from=git-fetcher /NodeSetTools /opt/NodeSetTools
